@@ -19,8 +19,9 @@ const App = () => {
     try {
       if (token) {
         const { data } = await api.get("/api/users/data", {
-          headers: { Authorization: token },
+          headers: { Authorization: `Bearer ${token}` }, // ✅ correct format
         });
+
         if (data.user) {
           dispatch(login({ token, user: data.user }));
         }
