@@ -1,29 +1,26 @@
 import jwt from "jsonwebtoken";
 
 export const protectRoute = (req, res, next) => {
+  const token = req.headers.authorization;
   try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader) {
+    if (!token) {
       return res
         .status(401)
         .json({ message: "Unauthorized access. No token provided." });
     }
 
-    // Remove "Bearer " prefix
-    const token = authHeader.split(" ")[1];
-    if (!token) {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (!decoded) {
       return res
         .status(401)
-        .json({ message: "Unauthorized access. Token missing." });
+        .json({ message: "Unauthorized access. Invalid token." });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.userId = decoded.userId;
     next();
   } catch (error) {
-    console.error("Protect Route Error:", error.message); // log to Vercel
-    return res.status(401).json({
-      message: "Unauthorized access. Invalid token.",
+    return res.status(500).json({
+      message: "Error in protect route middleware",
       error: error.message,
     });
   }
