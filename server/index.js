@@ -22,6 +22,10 @@ app.use("/api/users", userRouter);
 app.use("/api/resumes", resumeRouter);
 app.use("/api/ai", aiRouter);
 
+app.get("/", (req, res) => {
+  res.send("Welcome to Resume Builder API");
+});
+
 app.listen(PORT, () => {
   connectDB();
   console.log(`Server is running on port ${process.env.PORT}`);
