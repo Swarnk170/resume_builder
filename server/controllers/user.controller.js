@@ -68,7 +68,7 @@ export const loginUser = async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Error in login user controller",
+      message: error.message,
       error: error.message,
     });
   }
